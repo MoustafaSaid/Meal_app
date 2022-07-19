@@ -3,7 +3,7 @@ import 'package:meal_app/modules/category.dart';
 import 'package:meal_app/modules/meals.dart';
 
 // import './models/category.dart';
-// import './models/meal.dart';
+// import './models/meal_provider.dart';
 
 List<Category> DUMMY_CATEGORIES = [
   Category(

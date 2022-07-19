@@ -65,6 +65,8 @@ class MealItem extends StatelessWidget {
         elevation: 4,
         margin: const EdgeInsets.all(10),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+
           children: [
             Stack(
               children: [
@@ -73,11 +75,14 @@ class MealItem extends StatelessWidget {
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15),
                     ),
-                    child: Image.network(
-                      imageUrl,
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                    child: Hero(
+                      tag: id,
+                      child: Image.network(
+                        imageUrl,
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     )),
                 Positioned(
                   bottom: 20,
@@ -100,12 +105,14 @@ class MealItem extends StatelessWidget {
                 ),
               ],
             ),
+            // SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Row(
+
                     children: [
                       const Icon(Icons.schedule),
                       const SizedBox(
@@ -120,6 +127,9 @@ class MealItem extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(Icons.work),
+                      const SizedBox(
+                        width: 6,
+                      ),
                       Text(
                         complexityText,
                         style: const TextStyle(fontWeight: FontWeight.bold),

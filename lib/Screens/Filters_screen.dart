@@ -1,36 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/providers/meal_provider.dart';
+import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/widgets/main_drawer.dart';
+import 'package:provider/provider.dart';
 
 class FilterScreen extends StatefulWidget {
   static const routeName = 'filtersScreen';
-  final Function saveFilters;
-  final Map<String,bool> currentFilters;
-
-   FilterScreen({required this.saveFilters, required this.currentFilters});
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  bool glutenFree = false;
-  bool vegan = false;
-  bool vegetarian = false;
-  bool lactoseFree = false;
-  @override
-  initState(){
-     glutenFree = widget.currentFilters['gluten']!;
-     vegan = widget.currentFilters['vegan']!;
-     vegetarian = widget.currentFilters['vegetarian']!;
-     lactoseFree = widget.currentFilters['lactose']!;
-    super.initState();
-  }
+
 
   Widget buildSwitchTile(
       String title, String subTitle, bool currentValue, updateValue) {
     return SwitchListTile(
+      inactiveTrackColor: Provider.of<ThemeProvider>(context,listen: true).themeMode==ThemeMode.light?null:Colors.black,
       value: currentValue,
-      subtitle: Text(subTitle),
+      subtitle: Text(subTitle,style:const TextStyle(fontSize: 16)),
       onChanged: updateValue,
       title: Text(title),
     );
@@ -38,23 +27,14 @@ class _FilterScreenState extends State<FilterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final Function  saveFilters=  Provider.of<MealProvider>(context, listen: true).setFilters(filtersData);
+    final Map<String, bool> currentFilters =
+        Provider.of<MealProvider>(context, listen: true).filters;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your Filters"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Map<String, bool> filters = {
-                  'gluten': glutenFree,
-                  'lactose': lactoseFree,
-                  'vegan': vegan,
-                  'vegetarian': vegetarian,
-                };
-                widget.saveFilters(filters);
-
-              },
-              icon: const Icon(Icons.save_alt_outlined))
-        ],
+        actions: [],
       ),
       body: Container(
         padding: EdgeInsets.all(20),
@@ -69,45 +49,56 @@ class _FilterScreenState extends State<FilterScreen> {
             ),
             Expanded(
                 child: Container(
-                  child: ListView(
-
-                    children: [
-                      buildSwitchTile("Gluten_Free",
-                          "Only Includes Gluten_Free Meals.", glutenFree, (bool value) {
-                            setState(() {
-                              glutenFree = value;
-                            });
-                          }),
-                      buildSwitchTile("Lactose_Free",
-                          "Only Includes Lactose_Free Meals.", lactoseFree, (bool value) {
-                            setState(() {
-                              lactoseFree = value;
-                            });
-                          }),
-                      buildSwitchTile(
-                          "Vegetarian", "Only Includes Vegetarian Meals.", vegetarian,
-                              (bool value) {
-                            setState(() {
-                              vegetarian = value;
-                            });
-                          }),
-                      buildSwitchTile(
-                        "Vegan",
-                        "Only Includes Vegan Meals.",
-                        vegan,
-                            (bool value) {
-                          setState(() {
-                            vegan = value;
-                          });
-                        },
-                      )
-                    ],
-                  ),
-                ))
+              child: ListView(
+                children: [
+                  buildSwitchTile(
+                      "Gluten_Free",
+                      "Only Includes Gluten_Free Meals.",
+                      currentFilters['gluten']!, (bool value) {
+                    setState(() {
+                      currentFilters['gluten'] = value;
+                    });
+                    Provider.of<MealProvider>(context, listen: false)
+                        .setFilters();
+                  }),
+                  buildSwitchTile(
+                      "Lactose_Free",
+                      "Only Includes Lactose_Free Meals.",
+                      currentFilters['lactose']!, (bool value) {
+                    setState(() {
+                      currentFilters['lactose'] = value;
+                    });
+                    Provider.of<MealProvider>(context, listen: false)
+                        .setFilters();
+                  }),
+                  buildSwitchTile(
+                      "Vegetarian",
+                      "Only Includes Vegetarian Meals.",
+                      currentFilters['vegetarian']!, (bool value) {
+                    setState(() {
+                      currentFilters['vegetarian'] = value;
+                    });
+                    Provider.of<MealProvider>(context, listen: false)
+                        .setFilters();
+                  }),
+                  buildSwitchTile(
+                    "Vegan",
+                    "Only Includes Vegan Meals.",
+                    currentFilters['vegan'] !,
+                    (bool value) {
+                      setState(() {
+                        currentFilters['vegan'] = value;
+                      });
+                      Provider.of<MealProvider>(context, listen: false)
+                          .setFilters();
+                    },
+                  )
+                ],
+              ),
+            ))
           ],
         ),
       ),
-
       drawer: MainDrawer(),
     );
   }
